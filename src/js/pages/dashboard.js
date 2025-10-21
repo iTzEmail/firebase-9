@@ -1,5 +1,5 @@
-import { update } from "firebase/database";
-import { auth, db } from "../components/firebase.js";
+// import { update } from "firebase/database";
+// import { auth, db } from "../components/firebase.js";
 
 
 // // Real time collection data

@@ -123,21 +123,15 @@ export async function resetPassword(email) {
 
 
 /// Logout
-import { signOut, setPersistence, browserSessionPersistence } from "firebase/auth";
+import { signOut } from "firebase/auth";
 
 export async function logout() {
     try {
         sessionStorage.setItem("loggingOut", true);
 
-        console.log("before:", auth.currentUser);
-        
-        await setPersistence(auth, browserSessionPersistence);
-
         await signOut(auth);
 
         localStorage.removeItem("loginTime");
-
-        console.log("after:", auth.currentUser);
 
     } catch (err) {
         toast({ message: "An unknown error occurred. Please try again.", type: "error" });

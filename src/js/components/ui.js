@@ -1,51 +1,47 @@
 /// Setup Header & Footer
 import { logout } from './session.js';
 
-export function setupHeaderFooter() {
-    // Header
-    const headerPromise = fetch('/components/header.html')
-        .then(res => res.text())
-        .then(html => {
-            $body.insertAdjacentHTML('afterbegin', html);
+let header, footer
+export async function createHeaderFooter() {
+    if (!header) {
+        header = await fetch('/components/header.html').then(res => res.text())
+    }
+    if (!footer) {
+        footer = await fetch('/components/footer.html').then(r => r.text());
+    }
 
-            // Mobile menu toggle
-            const menuToggle = $('#menuToggle');
-            const navLinksContainer = $('#navLinks');
+    $body.insertAdjacentHTML('afterbegin', header);
+    $body.insertAdjacentHTML('beforeend', footer);
+}
 
-            menuToggle.addEventListener('click', () => {
-                navLinksContainer.classList.toggle('active');
-            });
+export function setupHeader() {
+    /// Header
+    // Mobile menu toggle
+    const menuToggle = $('#menuToggle');
+    const navLinksContainer = $('#navLinks');
 
-            // Close mobile menu when clicking on a link
-            $$('.nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinksContainer.classList.remove('active');
-                });
-            });
+    menuToggle.addEventListener('click', () => {
+        navLinksContainer.classList.toggle('active');
+    });
 
-            // Close mobile menu when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!menuToggle.contains(e.target) && !navLinksContainer.contains(e.target)) {
-                    navLinksContainer.classList.remove('active');
-                }
-            });
+    // Close mobile menu when clicking on a link
+    $$('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinksContainer.classList.remove('active');
+        });
+    });
 
-            // Logout
-            $$('.logout-btn').forEach(btn => {
-                btn.addEventListener('click', logout);
-            });
-        })
-        .catch(err => console.error('Error loading header:', err));
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!menuToggle.contains(e.target) && !navLinksContainer.contains(e.target)) {
+            navLinksContainer.classList.remove('active');
+        }
+    });
 
-    // Footer
-    const footerPromise = fetch('/components/footer.html')
-        .then(res => res.text())
-        .then(html => {
-            $body.insertAdjacentHTML('beforeend', html);
-        })
-        .catch(err => console.error('Error loading footer:', err));
-
-    return Promise.all([headerPromise, footerPromise]);
+    // Logout buttons
+    $$('.logout-btn').forEach(btn => {
+        btn.addEventListener('click', logout);
+    });
 }
 
 export function updateHeaderAuth(user) {
@@ -53,7 +49,7 @@ export function updateHeaderAuth(user) {
     const signup = $$('.signup-btn');
     const logout = $$('.logout-btn');
     const logo = $('.logo');
-    if (!login || !signup || !logout || !logo) {
+    if (!login.length || !signup.length || !logout.length || !logo) {
         // Try again
         setTimeout(() => updateHeaderAuth(user), 50);
         return;

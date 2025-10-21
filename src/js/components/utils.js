@@ -17,3 +17,16 @@ export const throttle = (fn, delay = 300) => {
         }
     }
 }
+
+
+/// DOM
+export function waitForDOM() {
+    return new Promise(resolve => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', resolve);
+
+        } else {
+            resolve();
+        }
+    });
+}

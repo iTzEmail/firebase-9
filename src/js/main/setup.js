@@ -1,12 +1,10 @@
-import { auth } from '../components/firebase.js';
-
-
 // Global variables
 window.$ = (selector) => document.querySelector(selector);
 window.$$ = (selector) => document.querySelectorAll(selector);
 
-window.$go = (url) => window.location.replace(url);
-window.$path = () => window.location.pathname.replace(/^\//, '');
+window.$loc = window.location
+window.$go = (url) => $loc.href = url;
+window.$getPath = () => $loc.pathname.replace(/^\//, '');
 
 window.$value = (e, selector, trim = true) => {
     const input = e.target.elements[selector];
@@ -15,21 +13,38 @@ window.$value = (e, selector, trim = true) => {
 }
 
 window.$body = document.body;
-window.$header = $('header');
-window.$main = $('main');
 
 
-// Cookies
-import { setPersistence, browserLocalPersistence } from 'firebase/auth';
+/// Main
+import { waitForDOM } from '../components/utils.js';
 
-setPersistence(auth, browserLocalPersistence).catch((error) => {
-    console.error('Error setting auth persistence:', error)
-});
+async function main() {
+    await waitForDOM();
+
+
+    await createHeaderFooter();
+
+    window.$header = $('header');
+    window.$main = $('main');
+
+
+    // Unfocus input box
+    $$('input').forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key == 'Enter') {
+                e.preventDefault()
+
+                input.blur();
+            }
+        });
+    });
+}
+
+const ready = main();
 
 
 /// Header & Auth
-import { wait } from '../components/utils.js'
-import { setupHeaderFooter, updateHeaderAuth } from '../components/ui.js'
+import { createHeaderFooter, setupHeader, updateHeaderAuth } from '../components/ui.js'
 import { logout, initAuthSignal, onUserChanged } from '../components/session.js';
 
 import { PUBLIC_PAGES, SESSION_CONFIG } from '../config.js';
@@ -61,25 +76,24 @@ function resetIdleTimer() {
 initAuthSignal();
 
 onUserChanged(async (user) => {
-    console.log(user);
+    await ready;
 
     if (sessionStorage.getItem('loggingOut')) {
         if (!user) {
-            await wait(500);
-
-            // User is logging out, redirect
             sessionStorage.removeItem('loggingOut');
 
+            // Redirect back to login
             $go('/login');
         }
         return;
     }
 
 
+    const path = $getPath();
     const verified = user && user.emailVerified;
 
     // Check if the user needs to be verified
-    const onCheckEmail = $path == 'check-email'
+    const onCheckEmail = path == 'check-email'
     if (user && !verified && !onCheckEmail) {
         $go('/check-email');
         return;
@@ -89,7 +103,7 @@ onUserChanged(async (user) => {
     // Check if the user is on a page they shouldn't
     const loginTime = localStorage.getItem('loginTime')
 
-    const isPublic = PUBLIC_PAGES.includes($path);
+    const isPublic = PUBLIC_PAGES.includes(path);
     const is404 = $("meta[name='page-type'][content='404']") !== null;
     if (user && (isPublic || verified && onCheckEmail)) {
         // Is on a public page while logged in
@@ -103,11 +117,10 @@ onUserChanged(async (user) => {
 
 
     // Setup page
-    setupHeaderFooter().then(() => {
-        updateHeaderAuth(user);
-    });
-
     $body.style.display = 'grid';
+
+    setupHeader();
+    updateHeaderAuth(user);
 
     if (user) {
         // Logged in
@@ -127,15 +140,3 @@ onUserChanged(async (user) => {
         localStorage.removeItem('loginTime');
     }
 });
-
-
-/// Unfocus input box
-$$('input').forEach(input => {
-    input.addEventListener('keydown', function(e) {
-        if (e.key == 'Enter') {
-            e.preventDefault()
-
-            input.blur();
-        }
-    });
-})
