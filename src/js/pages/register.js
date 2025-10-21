@@ -42,7 +42,7 @@ passwordInput.addEventListener('input', () => {
 });
 
 const confirmInput = $('#confirmPassword');
-confirmInput.addEventListener("input", () => {
+confirmInput.addEventListener('input', () => {
     const errorSpan = confirmInput.closest('.form-field').querySelector('.error-message');
     if (confirmInput.value && confirmInput.value !== passwordInput.value) {
         errorSpan.textContent = 'Passwords do not match';
@@ -60,14 +60,11 @@ import { register } from '../components/session.js';
 $('#register').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    document.body.classList.add('loading');
+    $body.classList.add('loading');
 
     try {
-        const firstName = e.target.firstName.value.trim();
-        const lastName = e.target.lastName.value.trim();
-        const email = e.target.email.value.trim();
-        const password = e.target.password.value;
-        const confirm = e.target.confirmPassword.value;
+        const password = $value(e, 'password', false);
+        const confirm = $value(e, 'confirmPassword', false);
 
         // Check reCAPTCHA
         const recaptchaResponse = grecaptcha.getResponse();
@@ -76,7 +73,6 @@ $('#register').addEventListener('submit', async (e) => {
             return;
             
         } else if (!Object.values(checks).every(({ regex }) => regex.test(password))) {
-            const messages = Object.values(checks).map(c => c.text);
             toast({ message: 'Password does not meet the required criteria', type: 'warning' });
             return;
 
@@ -86,16 +82,21 @@ $('#register').addEventListener('submit', async (e) => {
         }
         
         // Create the account
-        register(firstName, lastName, email, password);
+        register(
+            $value(e, 'firstName'),
+            $value(e, 'lastName'),
+            $value(e, 'email'),
+            password
+        );
 
     } finally {
-        document.body.classList.remove('loading');
+        $body.classList.remove('loading');
     }
 });
 
 
 // Toggle password
-$$(".toggle-password").forEach(icon => {
+$$('.toggle-password').forEach(icon => {
     icon.addEventListener('click', () => {
         const input = icon.previousElementSibling;
         if (input.type === 'password') {

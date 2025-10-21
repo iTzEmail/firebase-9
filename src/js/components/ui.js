@@ -12,15 +12,12 @@ export function setupHeaderFooter() {
             const menuToggle = $('#menuToggle');
             const navLinksContainer = $('#navLinks');
 
-            // Close mobile menu when clicking on a link
-            const navLinks = $$('.nav-links a');
-
             menuToggle.addEventListener('click', () => {
                 navLinksContainer.classList.toggle('active');
             });
 
             // Close mobile menu when clicking on a link
-            navLinks.forEach(link => {
+            $$('.nav-links a').forEach(link => {
                 link.addEventListener('click', () => {
                     navLinksContainer.classList.remove('active');
                 });
@@ -34,8 +31,7 @@ export function setupHeaderFooter() {
             });
 
             // Logout
-            const logoutBtns = $$('.logout-btn');
-            logoutBtns.forEach(btn => {
+            $$('.logout-btn').forEach(btn => {
                 btn.addEventListener('click', logout);
             });
         })

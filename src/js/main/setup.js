@@ -1,4 +1,4 @@
-import { auth } from "../components/firebase.js";
+import { auth } from '../components/firebase.js';
 
 
 // Global variables
@@ -6,6 +6,13 @@ window.$ = (selector) => document.querySelector(selector);
 window.$$ = (selector) => document.querySelectorAll(selector);
 
 window.$go = (url) => window.location.replace(url);
+window.$path = () => window.location.pathname.replace(/^\//, '');
+
+window.$value = (e, selector, trim = true) => {
+    const input = e.target.elements[selector];
+    if (!input) return '';
+    return trim ? input.value.trim() : input.value;
+}
 
 window.$body = document.body;
 window.$header = $('header');
@@ -13,26 +20,26 @@ window.$main = $('main');
 
 
 // Cookies
-import { setPersistence, browserLocalPersistence } from "firebase/auth";
+import { setPersistence, browserLocalPersistence } from 'firebase/auth';
 
 setPersistence(auth, browserLocalPersistence).catch((error) => {
-    console.error("Error setting auth persistence:", error)
+    console.error('Error setting auth persistence:', error)
 });
 
 
 /// Header & Auth
-import { wait } from "../components/utils.js"
-import { setupHeaderFooter, updateHeaderAuth } from "../components/ui.js"
-import { logout, initAuthSignal, onUserChanged } from "../components/session.js";
+import { wait } from '../components/utils.js'
+import { setupHeaderFooter, updateHeaderAuth } from '../components/ui.js'
+import { logout, initAuthSignal, onUserChanged } from '../components/session.js';
 
-import { PUBLIC_PAGES, SESSION_CONFIG } from "../config.js";
+import { PUBLIC_PAGES, SESSION_CONFIG } from '../config.js';
 
 // Idle
 let idleTimer;
 function resetIdleTimer() {
     clearTimeout(idleTimer);
 
-    const loginTime = localStorage.getItem("loginTime");
+    const loginTime = localStorage.getItem('loginTime');
     if (loginTime && (Date.now() - loginTime) > SESSION_CONFIG.maxSessionDuration) {
         logout();
 
@@ -46,7 +53,7 @@ function resetIdleTimer() {
 
         clearTimeout(idleTimer);
 
-        alert("You have been logged out due to inactivity.");
+        alert('You have been logged out due to inactivity.');
     }, SESSION_CONFIG.idleDuration);
 }
 
@@ -56,42 +63,41 @@ initAuthSignal();
 onUserChanged(async (user) => {
     console.log(user);
 
-    if (sessionStorage.getItem("loggingOut")) {
+    if (sessionStorage.getItem('loggingOut')) {
         if (!user) {
             await wait(500);
 
             // User is logging out, redirect
-            sessionStorage.removeItem("loggingOut");
+            sessionStorage.removeItem('loggingOut');
 
-            window.location.replace("/login");
+            $go('/login');
         }
         return;
     }
 
 
-    const path = window.location.pathname.replace(/^\//, '');
-    const verified = user && user.emailVerified
+    const verified = user && user.emailVerified;
 
     // Check if the user needs to be verified
-    const onCheckEmail = path == "check-email"
+    const onCheckEmail = $path == 'check-email'
     if (user && !verified && !onCheckEmail) {
-        window.location.replace("/check-email");
+        $go('/check-email');
         return;
     }
 
 
     // Check if the user is on a page they shouldn't
-    const loginTime = localStorage.getItem("loginTime")
+    const loginTime = localStorage.getItem('loginTime')
 
-    const isPublic = PUBLIC_PAGES.includes(path);
-    const is404 = document.querySelector('meta[name="page-type"][content="404"]') !== null;
+    const isPublic = PUBLIC_PAGES.includes($path);
+    const is404 = $("meta[name='page-type'][content='404']") !== null;
     if (user && (isPublic || verified && onCheckEmail)) {
         // Is on a public page while logged in
-        window.location.replace("/dashboard");
+        $go('/dashboard');
         return;
 
     } else if (!user && !isPublic && !is404) {
-        window.location.replace('/login');
+        $go('/login');
         return;
     }
 
@@ -101,15 +107,15 @@ onUserChanged(async (user) => {
         updateHeaderAuth(user);
     });
 
-    document.body.style.display = "grid";
+    $body.style.display = 'grid';
 
     if (user) {
         // Logged in
-        if (!loginTime) localStorage.setItem("loginTime", Date.now());
+        if (!loginTime) localStorage.setItem('loginTime', Date.now());
 
         // Start idle
         // Listen to user activity
-        ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evt => {
+        ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evt => {
             window.addEventListener(evt, resetIdleTimer);
         });
 
@@ -124,9 +130,9 @@ onUserChanged(async (user) => {
 
 
 /// Unfocus input box
-document.querySelectorAll("input").forEach(input => {
-    input.addEventListener("keydown", function(e) {
-        if (e.key == "Enter") {
+$$('input').forEach(input => {
+    input.addEventListener('keydown', function(e) {
+        if (e.key == 'Enter') {
             e.preventDefault()
 
             input.blur();

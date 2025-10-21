@@ -1,4 +1,4 @@
-import { HOME } from "../config.js";
+import { HOME } from '../config.js';
 
 
 /// Playing video
