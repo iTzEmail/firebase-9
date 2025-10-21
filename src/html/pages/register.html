@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/register.css">
+
+        <title>Register</title>
+        <link rel="icon" type="image/png" href="/assets/link-logo.png">
+
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    </head>
+    <body>
+        <div class="image-background" style="background-image: url('../assets/register.png');">
+            <div class="blur"></div>
+        </div>
+
+        <div class="site">
+            <h1>Create Account</h1>
+
+            <form id="register">
+                <div class="row">
+                    <div class="form-field">
+                        <div class="field">
+                            <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-field">
+                        <div class="field">
+                            <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <div class="field">
+                        <input type="email" id="email" name="email" placeholder="Personal Email" required>  
+                    </div>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="row">
+                    <div class="form-field">
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Password" required autocomplete="new-password">
+                            <i class="fa-solid fa-eye toggle-password"></i>
+                        </div>
+                        <ul class="password-checklist"></ul>
+                    </div>
+
+                    <div class="form-field">
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required autocomplete="new-password">
+                            <i class="fa-solid fa-eye toggle-password"></i>
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="g-recaptcha" data-sitekey="6LcEi-srAAAAAFBo9y0fpm3GWgYJvaungjP1wRq_"></div>
+
+                <button type="submit" class="design-btn register" style="height: 40px; background-color: #ffcc01;">
+                    Register
+                </button>
+            </form>
+
+            <p class="already">
+                Already have an account?&nbsp;&nbsp;
+                <a href="/login" class="design-btn" style="height: 40px; color: white; background-color: #77797d;">
+                    Login Here <span class="arrow">→</span>
+                </a>
+            </p>
+        </div>
+    </body>
+</html>
