@@ -4,6 +4,23 @@ import { toast } from "./ui.js"
 import { ERRORS } from "../config.js";
 
 
+/// Auth State Changed
+import { onAuthStateChanged } from "firebase/auth";
+
+const listeners = new Set();
+export function onUserChanged(callback) {
+    listeners.add(callback);
+
+    return () => listeners.delete(callback);
+}
+
+export function initAuthSignal() {
+    onAuthStateChanged(auth, (user) => {
+        for (const fn of listeners) fn(user);
+    });
+}
+
+
 /// Register
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
@@ -28,8 +45,7 @@ export async function register(firstName, lastName, email, password) {
             createdAt: serverTimestamp()
         });
 
-
-        window.location.replace("/check-email");
+        $go('/check-email');
 
     } catch (error) {
         const code = error.code || error.message;
@@ -66,14 +82,14 @@ export async function login(email, password) {
         const info = await signInWithEmailAndPassword(auth, email, password);
         const user = info.user;
         if (!user.emailVerified) {
-            window.location.replace("/check-email");
+            $go('/check-email');
 
             alert("Please verify your email before logging in.");
 
             return;
         };
 
-        window.location.replace("/dashboard");
+        $go('/dashboard');
         
     } catch (error) {
         const code = error.code || error.message;
@@ -94,7 +110,7 @@ export async function resetPassword(email) {
 
         alert("Password reset email sent. Check your inbox.");
 
-        window.location.replace("/login");
+        $go('/login');
 
     } catch (error) {
         const code = error.code || error.message;
@@ -126,21 +142,4 @@ export async function logout() {
     } catch (err) {
         toast({ message: "An unknown error occurred. Please try again.", type: "error" });
     }
-}
-
-
-/// Auth State Changed
-import { onAuthStateChanged } from "firebase/auth";
-
-const listeners = new Set();
-export function onUserChanged(callback) {
-    listeners.add(callback);
-
-    return () => listeners.delete(callback);
-}
-
-export function initAuthSignal() {
-    onAuthStateChanged(auth, (user) => {
-        for (const fn of listeners) fn(user);
-    });
 }

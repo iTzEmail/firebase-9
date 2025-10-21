@@ -1,10 +1,7 @@
-import { resetPassword } from "../components/session.js";
+import { resetPassword } from '../components/session.js';
 
-const reset = document.getElementById("reset");
-if (reset) {
-    reset.addEventListener("submit", async (e) => {
-        e.preventDefault();
+$('#reset').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        resetPassword(e.target.email.value);
-    });
-}
+    resetPassword(e.target.email.value);
+});

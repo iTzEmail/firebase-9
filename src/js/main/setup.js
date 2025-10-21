@@ -1,6 +1,17 @@
 import { auth } from "../components/firebase.js";
 
 
+// Global variables
+window.$ = (selector) => document.querySelector(selector);
+window.$$ = (selector) => document.querySelectorAll(selector);
+
+window.$go = (url) => window.location.replace(url);
+
+window.$body = document.body;
+window.$header = $('header');
+window.$main = $('main');
+
+
 // Cookies
 import { setPersistence, browserLocalPersistence } from "firebase/auth";
 
@@ -10,8 +21,6 @@ setPersistence(auth, browserLocalPersistence).catch((error) => {
 
 
 /// Header & Auth
-import { onAuthStateChanged  } from "firebase/auth";
-
 import { wait } from "../components/utils.js"
 import { setupHeaderFooter, updateHeaderAuth } from "../components/ui.js"
 import { logout, initAuthSignal, onUserChanged } from "../components/session.js";

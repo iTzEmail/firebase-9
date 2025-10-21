@@ -5,7 +5,7 @@ import { HOME } from "../config.js";
 var tag = document.createElement('script');
 tag.src = 'https://www.youtube.com/player_api';
 
-var firstScriptTag = document.getElementsByTagName('script')[0];
+var firstScriptTag = $('script');
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 var vid = HOME.vids;
@@ -47,5 +47,6 @@ function startEndWatcher() {
 
 function nextVideo() {
   currVid = (currVid + 1) % vid.length;
+  
   playCurrentVideo();
 }

@@ -12,6 +12,7 @@ export const throttle = (fn, delay = 300) => {
         const now = Date.now();
         if (now - lastExecutedAt >= delay) {
             fn.call(context, ...args);
+            
             lastExecutedAt = now;
         }
     }
