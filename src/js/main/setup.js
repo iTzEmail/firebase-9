@@ -1,8 +1,14 @@
 // Global variables
+window.$ready = false;
+window.$authDone = false;
+
 window.$ = (selector) => document.querySelector(selector);
 window.$$ = (selector) => document.querySelectorAll(selector);
 
-window.$loc = window.location
+window.$loc = window.location;
+
+window.$jrotc = $loc.hostname.includes('jrotccadets');
+
 window.$go = (url) => $loc.href = url;
 window.$getPath = () => $loc.pathname.replace(/^\//, '');
 
@@ -18,14 +24,39 @@ window.$body = document.body;
 /// Main
 import { waitForDOM } from '../components/utils.js';
 
+function createLink(rel, type, href) {
+    const link = document.createElement('link');
+    link.rel = rel;
+    link.type = type || 'text/css';
+    link.href = href;
+    
+    document.head.appendChild(link);
+}
+
 async function main() {
+    // Wait for page to load
     await waitForDOM();
 
 
+    // Add link logo
+    createLink('icon', 'image/png', '/assets/link-logo.png');
+
+    // Load font awesome
+    createLink('stylesheet', null, 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
+    // Create header & footer
     await createHeaderFooter();
 
-    window.$header = $('header');
-    window.$main = $('main');
+
+    // Change program
+    $$('.logo img').forEach(el => {
+        el.src = `/assets/${$jrotc ? 'jrotc' : 'rotc'}-logo.png`;
+        el.style.display = 'block';
+    });
+
+    $$('.program-title').forEach(el => {
+        el.textContent = el.textContent.replace(/JROTC/g, $jrotc ? 'JROTC' : 'ROTC');
+    });
 
 
     // Unfocus input box
@@ -38,14 +69,38 @@ async function main() {
             }
         });
     });
-}
 
-const ready = main();
+
+    // Toggle password
+    $$('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', () => {
+            const input = icon.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+
+            } else {
+                input.type = 'password';
+
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    });
+
+
+    window.$main = $('main');
+
+    window.$ready = true;
+}
+main();
 
 
 /// Header & Auth
 import { createHeaderFooter, setupHeader, updateHeaderAuth } from '../components/ui.js'
-import { logout, initAuthSignal, onUserChanged } from '../components/session.js';
+import { get, initAuthSignal, onUserChanged, logout } from '../components/session.js';
 
 import { PUBLIC_PAGES, SESSION_CONFIG } from '../config.js';
 
@@ -75,9 +130,7 @@ function resetIdleTimer() {
 // Setup auth
 initAuthSignal();
 
-onUserChanged(async (user) => {
-    await ready;
-
+onUserChanged(async (user, doc) => {
     if (sessionStorage.getItem('loggingOut')) {
         if (!user) {
             sessionStorage.removeItem('loggingOut');
@@ -87,6 +140,8 @@ onUserChanged(async (user) => {
         }
         return;
     }
+    
+    console.log(user, doc);
 
 
     const path = $getPath();
@@ -139,4 +194,7 @@ onUserChanged(async (user) => {
         // No user logged in
         localStorage.removeItem('loginTime');
     }
+
+
+    window.$authDone = true;
 });

@@ -1,0 +1,40 @@
+/* Layout Containers */
+.site {
+    width: 100%;
+    max-width: 500px;
+    padding: 40px 0;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    color: white;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+/* Typography */
+.site h1 {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+
+/* Form Fields */
+.field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.return {
+    color: #dbdbdb;
+    font-size: 0.95rem;
+    margin-top: 15px;
+    align-self: flex-start;
+}

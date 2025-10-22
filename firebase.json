@@ -1,23 +1,30 @@
 {
-  "hosting": {
-    "public": "dist",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "cleanUrls": true,
-    "rewrites": [
-      {
-        "source": "/",
-        "destination": "/home.html"
-      },
-      {
-        "source": "/home",
-        "destination": "/home.html"
-      }
-    ],
-    "errorPage": [
-      {
-        "code": 404,
-        "location": "/404"
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "site": "rotccadets",
+      "public": "dist",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "rewrites": [
+        { "source": "/", "destination": "/home.html" },
+        { "source": "/home", "destination": "/home.html" }
+      ],
+      "errorPage": [
+        { "code": 404, "location": "/404" }
+      ]
+    },
+    {
+      "site": "jrotccadets",
+      "public": "dist",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "rewrites": [
+        { "source": "/", "destination": "/home.html" },
+        { "source": "/home", "destination": "/home.html" }
+      ],
+      "errorPage": [
+        { "code": 404, "location": "/404" }
+      ]
+    }
+  ]
 }

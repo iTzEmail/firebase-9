@@ -3,7 +3,7 @@ export const SESSION_CONFIG = {
     maxSessionDuration: 60 * 60 * 1000, // 1 hour, optimal
 }
 
-export const PUBLIC_PAGES = ['', 'home', 'login', 'register', 'reset']
+export const PUBLIC_PAGES = ['', 'home', 'login', 'register', 'forgot']
 
 export const ERRORS = {
     REGISTER: {

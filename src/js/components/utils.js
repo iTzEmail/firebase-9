@@ -3,6 +3,22 @@ export async function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export const waitFor = (fn) => new Promise(resolve => {
+    const check = () => fn() ? resolve() : setTimeout(check, 50);
+    check();
+});
+
+export function waitForDOM() {
+    return new Promise(resolve => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', resolve);
+
+        } else {
+            resolve();
+        }
+    });
+}
+
 
 /// Throttle
 export const throttle = (fn, delay = 300) => {
@@ -16,17 +32,4 @@ export const throttle = (fn, delay = 300) => {
             lastExecutedAt = now;
         }
     }
-}
-
-
-/// DOM
-export function waitForDOM() {
-    return new Promise(resolve => {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', resolve);
-
-        } else {
-            resolve();
-        }
-    });
 }

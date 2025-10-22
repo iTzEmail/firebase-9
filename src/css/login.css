@@ -1,7 +1,7 @@
 /* Layout Containers */
 .site {
     width: 100%;
-    max-width: 800px;
+    max-width: 500px;
     padding: 40px 0;
     margin: 0 auto;
     display: flex;
@@ -17,11 +17,6 @@ form {
     gap: 15px;
 }
 
-.row {
-    display: flex;
-    gap: 15px;
-}
-
 
 /* Typography */
 .site h1 {
@@ -29,10 +24,10 @@ form {
     text-align: left;
 }
 
-.already {
+.dont {
     margin-top: 30px;
 }
-.already a {
+.dont a {
     margin-left: 10px;
 }
 
@@ -45,25 +40,10 @@ form {
     flex-direction: column;
 }
 
-
-/* Recaptcha */
-.g-recaptcha {
-    margin: 5px 0;
-}
-
-
-/* Password Checklist */
-.password-checklist {
-    list-style: none;
-    padding-left: 0;
-    font-size: 0.85;
-    margin: 4px 0 0 0;
-    font-size: 0.9rem;
-    margin-top: 4px;
-    min-height: 1em;
-    text-align: left;
-}
-
-.password-checklist li {
-    color: red;
+.forgot {
+    color: #dbdbdb;
+    font-size: 0.95rem;
+    margin-top: -10px;
+    align-items: flex-start;
+    align-self: flex-end;
 }

@@ -38,8 +38,8 @@
 }
 
 
-/* Spinning Text */
-@layer demo {
+/* Splitting */
+@layer splitting {
     .words,
     .word,
     .char,

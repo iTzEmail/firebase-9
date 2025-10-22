@@ -32,6 +32,9 @@ form {
 .already {
     margin-top: 30px;
 }
+.already a {
+    margin-left: 10px;
+}
 
 
 /* Form Fields */

@@ -109,7 +109,7 @@ body {
 
 .logo img {
     height: 40px;
-    display: block;
+    display: none;
 }
 
 .nav-links {
@@ -337,6 +337,10 @@ input {
 .auth-btn.login-btn,
 .auth-btn.signup-btn,
 .auth-btn.logout-btn { display: none; }
+
+.arrow {
+  margin-left: 4px;
+}
 
 
 /* Mobile Menu Toggle */
